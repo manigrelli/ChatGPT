@@ -65,6 +65,7 @@ set_menu = f"""
    .   max_chat     : Limit the ChatGPT chat count [0..15]
    .   max_words    : Limit the ChatGPT word count [3..500]
    .   text_wrap    : Limit the console text length [25.150]
+   .   stt_model    : set the STT model (AWS Polly or vosk model)
    .   voice <id>   : Change voice id using index or name
    .                : See 'show voices' for list
    """

@@ -8,23 +8,29 @@
   <img width="50" src="./public/open-ai.png" alt="ChatGPT">
   <img width="80" src="./public/python.png" alt="Python">
   <img width="40" src="./public/aws-polly.jpg" alt="AwsPolly">
+  <img width="80" height="45" src="./public/alphacephei.png" alt="alphacephei">
+  <img width="100" height="45" src="./public/lame.png" alt="lame">
+  <img width="60" src="./public/aws.png" alt="aws">
+  <img width="80" height="45" src="./public/mpg123.png" alt="mpg123">
 </p>
 
 ---
+
 This is an unofficial project solely intended for personal learning and research. It was inspired by this
 [YouTube video](https://youtu.be/4y1a4syMJHM) by Travis Rogers. Watch his demo -very cool. The solution you create
 with him comes up short with respect to recording your voice and making it usable. So that's what sparked my
 enthusiasm.  Many thanks to Travis!
+
 ---
+
 ## Overview:
-At its core, this application uses [Open-AI ChatGPT](https://openai.com/chatgpt) service to provide and interactive
+At its core, this application uses [Open-AI ChatGPT](https://openai.com/chatgpt) service to provide an interactive
 user experience. The text from ChatGPT is converted to audio using one of four Text-To-Speech (TTS) methods
-described below. The audio is played out the speaker using [mpg123](https://www.mpg123.de/) application. Next, you 
-respond by either typing in text or start an audio recording. If recording, the audio from the microphone is converted
-from WAV to MP3 format using [LAME](https://lame.sourceforge.io/) and then the MP3 is translated to text using the
-[Amazon Whisperer](https://aws.amazon.com/codewhisperer/resources/#Getting_started/) service. Now, with your response
-in text format, the interaction with ChatGpt repeats. All of these services are either free or very inexpensive.  It is
-fun to play with and remarkably my son found a great use case:
+described below. The audio is then played out the speaker using [mpg123](https://www.mpg123.de/) application. Next, you 
+respond by either typing in text or start an audio recording with your microphone. Your audio is converted to text using
+one of two Speech-to-Text (STT) methods described below. Now, with your response in text format, the interaction
+with ChatGpt repeats. All of these services are either free or very inexpensive.  It is fun to play with and 
+remarkably my son found a great use case:
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 "Quiz me on the parts of a plant cell"
@@ -35,37 +41,49 @@ fun to play with and remarkably my son found a great use case:
 ---
 
 When launched, the application begins with a familiar operating system like prompt or 
-[CLI](https://en.wikipedia.org/wiki/Command-line_interface).  From there you experiences an intuitive menu
+[CLI](https://en.wikipedia.org/wiki/Command-line_interface).  From there you experience an intuitive menu
 to navigate several options:
 
-1. __Interactive Chat with ChatGPT Bot:__  This allows you to either type in text (free) or record your voice (free) and convert it to text (not free). To save 
-on token usage with ChatGBT (also not free) you can limit the history of the HTTP request message sent to Open-AI.
-A free alternative speech-to-text (STT) service is being explored but at this time only AWS whisper is supported. 
-See the example below.
+1. __Interactive Chat with ChatGPT Bot:__  This allows you to either type in text (free) or record your voice (free)
+and automatically convert it to text (free and not free). To save on token usage with ChatGBT (not free) you can
+limit the history of the HTTP request message sent to Open-AI. See the example below.
  
-2. __Bot vs. Bot:__  You are prompted to optionally define the role of two ChatBots. By default one is a male and the 
+2. __Bot vs. Bot:__  You are prompted to optionally re-define the role of two ChatBots. By default one is a male and the 
 other is female. You set up their 'roles' and they 'talk' to each other, literally!  It is humorous at times. At the
 end of the day you will realize the Open-AI model is programmed to be extremely sympathetic.  See the example below.
 
-3. __Change, Show, and Test the APIs:__  What's a CLI with out dorky ways to set, show and execute quick unit tests.  This was useful in testing...
+3. __Change, Show, and Test the APIs:__  What's a CLI with out dorky ways to set, show and execute quick unit tests.
+This was useful in testing...
 
 ---
 
-### Text-to-Spech (TTS) drivers:
+### Text-to-Speech (TTS) drivers:
 Four TTS drivers are supported totalling 18 different voices. Dig into the code and you can add more. The one that 
 Travis uses in his demo is [ElevenLabs.io](https://elevenlabs.io/).  I gotta be honest - It is awesome!!!
-Only problem is the free version includes ~10k characters per month.  That won't last long. While exploring 
+Only problem is the free version includes only ~10k characters per month.  That won't last long. While exploring 
 Speech-To-Text from AWS, I picked up their [Polly](https://docs.aws.amazon.com/polly/latest/dg/what-is.html) TTS
-service.  AWS pricing is extremely reasonable. A few hours of fun for 30 cents!  Polly's voices are pretty good and
+service.  AWS pricing is extremely reasonable. Several hours of fun for 30 cents!  Polly's voices are pretty good and
 they do have advanced models at a higher cost. Then, there's the free TTS: [Google's gTTS](https://pypi.org/project/gTTS/)
 and [Python pyTTSx3](https://pypi.org/project/pyttsx3/).  You get what you pay for.  Honestly, gTTS has some great 
-voices if you choose an accent other than us/eng. You will find some MP3 samples in the /content directory.
+voices if you choose an accent other than us/eng. You will find some MP3 samples in the [/content]([content/]) directory.
 
 ---
 
-Also included (if you trust me) is bin/chatbot_v1.exe which you can run stand-alone.  It was created with pyInstaller
-on Windows 11 Home Edition using 64bit.  I tried to launch the exe on a 32 bit Windows 7 and it complained.
-Win XP - forget it!  It worked fine on both my wife's and son's comparable Windows OS.
+### ### Speech-to-Text (STT) drivers:
+Two STT drivers are supported.  The free version provided by [alphacephei.com](https://alphacephei.com/vosk/models) 
+requires you to download a 40Mb model.  For more specific details on how to configure it, go [here](models/Models.md).
+It is very simple to do. This method streams the recording right to the vosk api. There's no file system read/writes.
+
+Alternatively [Amazon Whisperer](https://aws.amazon.com/codewhisperer/resources/#Getting_started/) also does a 
+great job.  This service is not free but is very inexpensive.  The microphone records the WAV file and that
+is converted to MP3 format using [LAME](https://lame.sourceforge.io/). Then the MP3 is translated to text using the
+[Amazon Whisperer](https://aws.amazon.com/codewhisperer/resources/#Getting_started/) service.
+
+---
+
+Also included (if you trust me) is a stand-alone executable, [bin/chatbot_v1.exe](./bin/chatbot_v1.exe).  It was 
+created with pyInstaller on Windows 11 Home Edition using 64bit.  I tried to launch the exe on a 32 bit Windows 7
+and it complained. Win XP - forget it!  It worked fine on both my wife's and son's comparable Windows OS.
 
 ---
 
@@ -88,7 +106,7 @@ D:\>
 <br>
 
 ```
-D:\> python main.py -k api.txt
+D:\> python main.py -i config.ini
 
    ___ ___ _____        ___ _         _     ___      _
   / __| _ \_   _|      / __| |_  __ _| |_  | _ ) ___| |_
