@@ -64,5 +64,5 @@ def play_tts(text, voice=None, save_mp3='content/Gpt.mp3', debug=False, **kwargs
 
 if __name__ == "__main__":
     from common import parse_dotini
-    parse_dotini(file=G.DOT_INI)
+    parse_dotini(file=".env")
     play_tts(f'How would you like to play with my little razor blades', voice="Giorgio", debug=True)

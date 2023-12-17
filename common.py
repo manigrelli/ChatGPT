@@ -115,57 +115,6 @@ def api_check_key_status(show=True):
 
 # ---------------------------------------------------------------------------------------
 
-
-def ng_parse_dotenv(dotenv_path=None, loadenv=False,):
-    """"""
-    trace(log=True)
-
-    # loadenv = False : dont' touch system environment, just parse it
-    # loadenv = True  : set all the variables in the file
-    # <string>        : only set the variable defined in <string>
-
-    if dotenv_path is None:
-        dotenv_path = G.DOT_INI
-
-    if not os.path.exists(dotenv_path):
-        return {}
-
-    env_dict = dict()
-    with open(dotenv_path) as f:
-        for line in f:
-            line = line.strip()
-            if not line or line.startswith('#') or '=' not in line:
-                continue
-            env_var, env_value = line.split('=', 1)
-
-            # Remove any leading and trailing spaces in key, value
-            env_var, env_value = env_var.strip(), env_value.strip().encode('unicode-escape').decode('ascii')
-
-            # if len(v) > 0:
-            #     quoted = v[0] == v[len(v) - 1] in ['"', "'"]
-            #     if quoted:
-            #         v = decode_escaped(v[1:-1])
-
-            env_dict[env_var] = env_value
-            if loadenv and type(loadenv) is bool:
-                os.unsetenv(env_var)
-                os.environ[env_var] = env_value
-                if os.getenv(env_var) != env_value:
-                    chat_log.logger.error(f"{trace()}: Failed to set '{env_var}' to '{env_value}'")
-
-    if type(loadenv) is str:
-        if type(loadenv) is str:
-            if loadenv not in env_dict:
-                chat_log.logger.error(f"Variable '{loadenv} not found in file ({dotenv_path})")
-            else:
-                os.environ[str(loadenv)] = env_dict[loadenv]
-        else:
-            chat_log.logger.error(f"load_env type is {type(loadenv)}. Expect bool or string.")
-    return env_dict
-
-
-# ---------------------------------------------------------------------------------------
-
 def check_var_range(var_name, val, min_value, max_value):
     """"""
     trace(log=True)

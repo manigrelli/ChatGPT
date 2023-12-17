@@ -1,6 +1,10 @@
 import os
+from time import time
 import sounddevice as sd
 from scipy.io.wavfile import write
+
+from vosk import Model, KaldiRecognizer
+import pyaudio
 
 import globals as G
 from chatbot_logger import chat_log, trace
@@ -25,8 +29,59 @@ def audio_player(mp3_file_name="content/user.mp3"):
         return False
     return True
 
+
 # ---------------------------------------------------------------------------------------
 
+def audio_recorder_stt(duration=15, model=None):
+    """"""
+    trace()
+
+    if model is None:
+        chat_log.logger.critical(f"{trace()}: model not defined (None)'")
+        return
+
+    model = os.path.join("models", model)
+    if not os.path.exists(model):
+        chat_log.logger.error(f"{trace()}: model directory does not exist '{model}'")
+        return
+
+    try:
+        model = Model(model)
+        recognizer = KaldiRecognizer(model, 16000)
+
+        mic = pyaudio.PyAudio()
+        stream = mic.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=8192)
+        stream.start_stream()
+
+        buffer = []
+        watchdog = int(time() + duration)
+
+        # records for the duration or a text buffer comes up empty (silence detected)
+        print("** Start Recording...")
+
+        while int(time()) <= watchdog:
+            data = stream.read(4096)
+            if recognizer.AcceptWaveform(data):
+                text = recognizer.Result()[14:-3]
+                if text:
+                    print(f"{text}.")
+                    buffer.append(text)
+                else:
+                    break
+
+        print("** Stop!")
+        text = ". ".join(buffer)
+    except Exception as e:
+        chat_log.logger.critical(f"{trace()}: Exception {e}'")
+        return
+    else:
+        text = text.strip()
+        if not text:
+            print("Nothing recorded?")
+        return text
+
+
+# ---------------------------------------------------------------------------------------
 
 def audio_recorder(duration=5, freq=44100, mp3_file_name="content/user.mp3", playback=False):
     """"""
@@ -85,11 +140,20 @@ def audio_recorder(duration=5, freq=44100, mp3_file_name="content/user.mp3", pla
 
 
 if __name__ == '__main__':
-    if audio_recorder(mp3_file_name="./content/test_mic.mp3", playback=False):
-        print("INFO: Recording successful")
-        if audio_player(mp3_file_name="./content/test_mic.mp3"):
-            print("INFO: Playback successful")
+    from common import parse_dotini
+    parse_dotini(file=".env")
+
+    if os.path.exists(os.path.join("models", G.STT_MODEL)):
+        if audio_recorder_stt(duration=10):
+            print("INFO: Recording successful")
         else:
-            print("ERROR: Playback failed!!!")
+            print("ERROR: Recording failed!!!")
     else:
-        print("ERROR: Recording failed!!!")
+        if audio_recorder(mp3_file_name="./content/test_mic.mp3", playback=False):
+            print("INFO: Recording successful")
+            if audio_player(mp3_file_name="./content/test_mic.mp3"):
+                print("INFO: Playback successful")
+            else:
+                print("ERROR: Playback failed!!!")
+        else:
+            print("ERROR: Recording failed!!!")

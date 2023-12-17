@@ -34,6 +34,7 @@ help_chat_menu = f"""
     exit             : To exit application
     """
 
+
 debug_menu = f"""
    test <option>    : Short: 't <option>'
    .     gpt        : Test Open-AI GPT
@@ -120,6 +121,11 @@ def ans_matched_common(args=None, botobj=None, ret_bool=True):
                 case '^max_words$':
                     if check_var_range(var_name=param, val=value, min_value=3, max_value=100):
                         G.MAX_WORDS = int(value)
+                case '^stt_model$':
+                    if value != "AWS Polly" and not os.path.exists(os.path.join("models", value)):
+                        print(f"Error: param value ({value}) is invalid.  Expected 'AWS Polly' or a directory in ./models")
+                    else:
+                        G.STT_MODEL = value
                 case '^text_wrap$':
                     if check_var_range(var_name=param, val=value, min_value=25, max_value=150):
                         G.TEXT_WRAP = int(value)
@@ -151,7 +157,12 @@ def ans_matched_common(args=None, botobj=None, ret_bool=True):
 
                     print("{0:30} {1}".format("ini_file", G.DOT_INI))
                     print("{0:30} {1}".format("gpt_model", G.GPT_MODEL))
-                    print("{0:30} {1}".format("sst_model", G.STT_MODEL))
+
+                    print("{0:30} {1}".format("stt_model", G.STT_MODEL), end=" ")
+                    if G.STT_MODEL != "AWS Polly" and not os.path.exists(os.path.join("models", G.STT_MODEL)):
+                        print("(Invalid)")
+                    else:
+                        print()
 
                     for k, v in G.API_STATE.items():
                         v = ["Not Configured", "Configured"][v]

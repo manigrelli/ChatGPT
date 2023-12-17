@@ -2,7 +2,7 @@ from random import choice as random_choice
 
 from common import *
 from menus_shared import help_chat_menu, ans_matched_common
-from player_recorder import audio_recorder
+from player_recorder import audio_recorder, audio_recorder_stt
 from chatbotgpt import ChatBotGpt
 # from chat_logger import chat_log
 
@@ -148,8 +148,14 @@ def chat_with_bot(chatbot=None):
             continue
 
         if seconds:
-            audio_recorder(duration=seconds, mp3_file_name=mp3_file_name)
-            user_message = ChatBotGpt.transcribe_audio(mp3_file_name)
+            if os.path.exists(os.path.join("models", G.STT_MODEL)):
+                # this API will record until silence is detected
+                user_message = audio_recorder_stt(duration=15, model=G.STT_MODEL)
+            elif G.STT_MODEL == "AWS Polly":
+                audio_recorder(duration=seconds, mp3_file_name=mp3_file_name)
+                user_message = ChatBotGpt.transcribe_audio(mp3_file_name)
+            else:
+                chat_log.logger.critical(f"{trace()}: Invalid Speech-To-Text model '{G.STT_MODEL}'")
 
 # ---------------------------------------------------------------------------------------
 
