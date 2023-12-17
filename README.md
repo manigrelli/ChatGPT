@@ -65,14 +65,16 @@ Speech-To-Text from AWS, I picked up their [Polly](https://docs.aws.amazon.com/p
 service.  AWS pricing is extremely reasonable. Several hours of fun for 30 cents!  Polly's voices are pretty good and
 they do have advanced models at a higher cost. Then, there's the free TTS: [Google's gTTS](https://pypi.org/project/gTTS/)
 and [Python pyTTSx3](https://pypi.org/project/pyttsx3/).  You get what you pay for.  Honestly, gTTS has some great 
-voices if you choose an accent other than us/eng. You will find some MP3 samples in the [/content]([content/]) directory.
+voices if you choose an accent other than us/eng. You will find some MP3 samples in the
+[/content](https://github.com/manigrelli/ChatGPT/tree/main/content) directory.
 
 ---
 
-### ### Speech-to-Text (STT) drivers:
+### Speech-to-Text (STT) drivers:
 Two STT drivers are supported.  The free version provided by [alphacephei.com](https://alphacephei.com/vosk/models) 
-requires you to download a 40Mb model.  For more specific details on how to configure it, go [here](models/Models.md).
-It is very simple to do. This method streams the recording right to the vosk api. There's no file system read/writes.
+requires you to download a 40Mb model.  For more specific details on how to configure it, go
+[here](https://github.com/manigrelli/ChatGPT/blob/main/models/Models.md). It is very simple to do. This method
+streams the recording right to the vosk api. There's no file system read/writes.
 
 Alternatively [Amazon Whisperer](https://aws.amazon.com/codewhisperer/resources/#Getting_started/) also does a 
 great job.  This service is not free but is very inexpensive.  The microphone records the WAV file and that
@@ -81,9 +83,10 @@ is converted to MP3 format using [LAME](https://lame.sourceforge.io/). Then the 
 
 ---
 
-Also included (if you trust me) is a stand-alone executable, [bin/chatbot_v1.exe](./bin/chatbot_v1.exe).  It was 
-created with pyInstaller on Windows 11 Home Edition using 64bit.  I tried to launch the exe on a 32 bit Windows 7
-and it complained. Win XP - forget it!  It worked fine on both my wife's and son's comparable Windows OS.
+Also included (if you trust me) is a stand-alone executable,
+[bin/chatbot_v1.exe](https://github.com/manigrelli/ChatGPT/tree/main/bin).  It was created with pyInstaller
+on Windows 11 Home Edition using 64bit.  I tried to launch the exe on a 32 bit Windows 7 and it complained.
+Win XP - forget it!  It worked fine on both my wife's and son's comparable Windows OS.
 
 ---
 
