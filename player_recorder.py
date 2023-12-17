@@ -31,7 +31,13 @@ def audio_player(mp3_file_name="content/user.mp3"):
 
 
 # ---------------------------------------------------------------------------------------
-
+# Vosk:
+# https://alphacephei.com/vosk/
+# https://buddhi-ashen-dev.vercel.app/posts/offline-speech-recognition
+# Interesting:
+#
+# https://gist.github.com/mirfan899/4dec738636c711d378eac1793ec95329
+#
 def audio_recorder_stt(duration=15, model=None):
     """"""
     trace()
