@@ -35,7 +35,7 @@ def parse_dotini(file="config.ini"):
     trace(log=True)
     
     if not os.path.exists(file):
-        chat_log.logger.error(f"{trace()}: File or path does not exit: '{file}'")
+        chat_log.logger.error(f"{trace()}: File or path does not exist: '{file}'")
         return
 
     try:

@@ -1,6 +1,6 @@
 alias run='uvicorn main:app --reload'
 alias backup="cp *.py ./Backup; cp -r Lib ./Backup; cp .* ./Backup"
-alias freeze="pip freeze > requirements.txt"
+alias freeze="echo \"# Python version 3.11.4\" > requirements.txt; pip freeze >> requirements.txt"
 
 alias copy2Usb="cp -r./dist/* /d"
 alias makeversion="sa;echo \"# Last Build:\" > version.py; echo \"build_date=\\\"`date`\\\"\" >> version.py"
@@ -13,5 +13,5 @@ alias post_clean_md5="post_clean; update_md5"
 
 alias makemain="pre_clean; pyinstaller.exe  --noconfirm --onedir  --add-data 'bin:bin' main.py; post_clean"
 alias makepy_d="pre_clean; pyinstaller.exe  --noconfirm --onedir  --add-data 'bin:bin' pyInst_main.py; post_clean"
-alias makepy_f="pre_clean; pyinstaller.exe  --noconfirm --onefile --add-data 'bin:bin' pyInst_main.py; post_clean_md5"
+alias makepy_f="pre_clean; pyinstaller.exe  --noconfirm --onefile --collect-all vosk --add-data 'bin:bin' pyInst_main.py; post_clean_md5"
 

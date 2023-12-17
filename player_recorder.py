@@ -3,11 +3,12 @@ from time import time
 import sounddevice as sd
 from scipy.io.wavfile import write
 
+import globals as G
+from chatbot_logger import chat_log, trace
+
 from vosk import Model, KaldiRecognizer
 import pyaudio
 
-import globals as G
-from chatbot_logger import chat_log, trace
 
 # ---------------------------------------------------------------------------------------
 
@@ -38,6 +39,8 @@ def audio_player(mp3_file_name="content/user.mp3"):
 #
 # https://gist.github.com/mirfan899/4dec738636c711d378eac1793ec95329
 #
+
+
 def audio_recorder_stt(duration=15, model=None):
     """"""
     trace()
