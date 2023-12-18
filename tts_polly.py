@@ -7,6 +7,8 @@ from player_recorder import audio_player
 from chatbotgpt import ChatBotGpt
 
 # https://aws.amazon.com/polly/
+# https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html
+# https://docs.aws.amazon.com/polly/latest/dg/getting-started.html
 # https://docs.aws.amazon.com/polly/latest/dg/API_SynthesisTask.html#polly-Type-SynthesisTask-SnsTopicArn
 # https://docs.aws.amazon.com/polly/latest/dg/API_SynthesizeSpeech.html
 # https://docs.aws.amazon.com/polly/latest/dg/voicelist.html

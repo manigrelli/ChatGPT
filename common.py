@@ -45,7 +45,7 @@ def parse_dotini(file="config.ini"):
         G.GPT_MODEL = config.get('Open AI', 'gpt_model', fallback=None)
         G.STT_MODEL = config.get('Speech To Text', 'model', fallback=None)
         if not G.STT_MODEL:
-            G.STT_MODEL = "AWS Polly"
+            G.STT_MODEL = "AWS"
 
         G.OPENAI_API = config.get('Open AI', 'api_key', fallback=None)
         G.OPENAI_ORG = config.get('Open AI', 'organization_key', fallback=None)

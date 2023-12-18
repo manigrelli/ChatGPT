@@ -225,7 +225,7 @@ Thanks for listening!  Goodbye...
 [Default]
 
 [Speech To Text]
-model=AWS Polly
+model=AWS
 
 [Open AI]
 api_key=sk-000000000000000000000000000000000000000000000000

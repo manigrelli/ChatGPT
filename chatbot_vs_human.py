@@ -154,7 +154,7 @@ def chat_with_bot(chatbot=None):
             if os.path.exists(os.path.join("models", G.STT_MODEL)):
                 # this API will record until silence is detected
                 user_message = audio_recorder_stt(duration=15, model=G.STT_MODEL)
-            elif G.STT_MODEL == "AWS Polly":
+            elif G.STT_MODEL == "AWS":
                 audio_recorder(duration=seconds, mp3_file_name=mp3_file_name)
                 user_message = ChatBotGpt.transcribe_audio(mp3_file_name)
             else:

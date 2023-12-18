@@ -66,7 +66,7 @@ set_menu = f"""
    .   max_chat     : Limit the ChatGPT chat count [0..15]
    .   max_words    : Limit the ChatGPT word count [3..500]
    .   text_wrap    : Limit the console text length [25.150]
-   .   stt_model    : set the STT model (AWS Polly or model directory name)
+   .   stt_model    : set the STT model (AWS or model directory name)
    .   voice <id>   : Change voice id using index or name
    .                : See 'show voices' for list
    """
@@ -130,8 +130,8 @@ def ans_matched_common(args=None, botobj=None, ret_bool=True):
                         G.MAX_WORDS = int(value)
 
                 case '^stt_model$':
-                    if value != "AWS Polly" and not os.path.exists(os.path.join("models", value)):
-                        print(f"Error: param value ({value}) is invalid.  Expected 'AWS Polly' or a directory in ./models")
+                    if value != "AWS" and not os.path.exists(os.path.join("models", value)):
+                        print(f"Error: param value ({value}) is invalid.  Expected 'AWS' or a directory in ./models")
                     else:
                         G.STT_MODEL = value
 
@@ -157,24 +157,24 @@ def ans_matched_common(args=None, botobj=None, ret_bool=True):
                 case '^con[fig]*$':
                     print()
                     print("{0:30} {1}".format("Parameter", "Value"))
-                    print("=" * 50)
-                    print("{0:30} {1}".format("Introduction", botobj.intro))
-                    print("{0:30} {1}".format("GPT Voice", botobj.voice))
-                    print("{0:30} {1}".format("TTS Driver", botobj.voices.get_module_name(botobj.voice)))
+                    print("-" * 100)
+                    print("{0:30} {1}".format("ini_file", G.DOT_INI))
+                    print("{0:30} {1}".format("gpt_model", G.GPT_MODEL))
+
+                    print("{0:30} {1}".format("stt_model", G.STT_MODEL), end=" ")
+                    if G.STT_MODEL != "AWS" and not os.path.exists(os.path.join("models", G.STT_MODEL)):
+                        print("(Invalid)")
+                    else:
+                        print()
+
+                    print("{0:30} {1}".format("tts_driver",
+                        f"{botobj.voices.get_module_name(botobj.voice)} ({botobj.voice})"))
+                    print("{0:30} {1}".format("intro", botobj.intro))
                     print("{0:30} {1}".format("max_words", G.MAX_WORDS))
                     print("{0:30} {1}".format("text_wrap", G.TEXT_WRAP))
                     print("{0:30} {1}".format("max_chat", G.MAX_CHAT))
                     print("{0:30} {1}".format("log_level", chat_log))
                     print("{0:30} {1}".format("enable_limit", bool(G.ENABLE_LIMIT)))
-
-                    print("{0:30} {1}".format("ini_file", G.DOT_INI))
-                    print("{0:30} {1}".format("gpt_model", G.GPT_MODEL))
-
-                    print("{0:30} {1}".format("stt_model", G.STT_MODEL), end=" ")
-                    if G.STT_MODEL != "AWS Polly" and not os.path.exists(os.path.join("models", G.STT_MODEL)):
-                        print("(Invalid)")
-                    else:
-                        print()
 
                     for k, v in G.API_STATE.items():
                         v = ["Not Configured", "Configured"][v]
@@ -252,7 +252,7 @@ def ans_matched_common(args=None, botobj=None, ret_bool=True):
 
                 case 'stt':
                     # Test speech-to-text drivers
-                    if "y" == input("Do you want to test 'AWS Polly' [y|n]: ").lower():
+                    if "y" == input("Do you want to test 'AWS' [y|n]: ").lower():
                         audio_recorder(duration=3, mp3_file_name="content/user.mp3")
                         botobj.transcribe_audio("content/user.mp3")
 
