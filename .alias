@@ -7,11 +7,14 @@ alias makeversion="sa;echo \"# Last Build:\" > version.py; echo \"build_date=\\\
 
 alias update_md5="cp dist/pyInst_main.exe ./bin/chatbot_v1.exe; sed -i  \"s|.*chatbot.*exe$|\`md5sum bin/chatbot_v1.exe\`|\" README.md"
 
-alias pre_clean="rm -rf ./dist/*; rm -rf ./databases/*; rm -rf; rm -f ./bin/chatbot*.exe; rm -f ./content/*.mp3; makeversion; ln -s Backup/pyInst_main.py" 
+alias pre_clean="rm -rf ./dist/*; rm -rf ./databases/*; rm -rf; rm -f ./bin/chatbot*.exe; rm -f ./content/*.mp3; makeversion; ln -s Backup/pyInst_main.py"
 alias post_clean="rm pyInst_main.py; cp -r Backup/content/*.mp3 ./content/; cp .env ./dist/config.ini; rm -f *.spec"
 alias post_clean_md5="post_clean; update_md5"
 
 alias makemain="pre_clean; pyinstaller.exe  --noconfirm --onedir  --add-data 'bin:bin' main.py; post_clean"
 alias makepy_d="pre_clean; pyinstaller.exe  --noconfirm --onedir  --add-data 'bin:bin' pyInst_main.py; post_clean"
 alias makepy_f="pre_clean; pyinstaller.exe  --noconfirm --onefile --collect-all vosk --add-data 'bin:bin' pyInst_main.py; post_clean_md5"
+<<<<<<< HEAD
 
+=======
+>>>>>>> stt

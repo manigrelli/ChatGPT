@@ -132,10 +132,13 @@ def chat_with_bot(chatbot=None):
 
                 case '^(\\?|h|help|)$':
                     print(help_chat_menu)
+
                 case '^(q|quit)$':
                     return 0
+
                 case '^exit$':
                     return 1
+
                 case _:
                     match = ans_matched_common(args=args, botobj=chatbot, ret_bool=False)
                     if type(match) is tuple:

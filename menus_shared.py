@@ -2,7 +2,7 @@ import json, textwrap
 from pprint import pprint
 
 from tts_voices import Voices
-from player_recorder import audio_recorder
+from player_recorder import audio_recorder, audio_recorder_stt
 
 from common import *
 import globals as G
@@ -39,6 +39,7 @@ debug_menu = f"""
    test <option>    : Short: 't <option>'
    .     gpt        : Test Open-AI GPT
    .     mic        : Test recording & speech-to-text
+   .     stt        : Test each speech-to-text driver
    .     tts        : Test each text-to-speech driver
    .     voices     : Test all voices
    debug <option>   : Short: 'd <option>'
@@ -65,7 +66,7 @@ set_menu = f"""
    .   max_chat     : Limit the ChatGPT chat count [0..15]
    .   max_words    : Limit the ChatGPT word count [3..500]
    .   text_wrap    : Limit the console text length [25.150]
-   .   stt_model    : set the STT model (AWS Polly or vosk model)
+   .   stt_model    : set the STT model (AWS Polly or model directory name)
    .   voice <id>   : Change voice id using index or name
    .                : See 'show voices' for list
    """
@@ -98,6 +99,7 @@ def ans_matched_common(args=None, botobj=None, ret_bool=True):
         # Common Set Commands: set param value
         case '^s[et]*\\s*\\??$':
             print(set_menu)
+
         case '^set [a-z_]+ .+$':
             param, value = arg2.split(" ", maxsplit=1)
             match RegExpNoCase(param):
@@ -108,38 +110,47 @@ def ans_matched_common(args=None, botobj=None, ret_bool=True):
                         # Change system introduction
                         botobj.intro = botobj.clean_chat_message(text=value, add_limit=True)
                     restart_db = True
+
                 case '^enable_limit$':
                     # do not put this in 'set cli' help
                     if check_var_range(var_name=param, val=value, min_value=0, max_value=1):
                         G.ENABLE_LIMIT = str2bool(value)
+
                 case '^log_level$':
                     if check_var_range(var_name=param, val=value, min_value=1, max_value=5):
                         value = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"][int(value)]
                         chat_log.logger.setLevel(value)
+
                 case '^max_chat$':
                     if check_var_range(var_name=param, val=value, min_value=0, max_value=15):
                         G.MAX_CHAT = int(value)
+
                 case '^max_words$':
                     if check_var_range(var_name=param, val=value, min_value=3, max_value=100):
                         G.MAX_WORDS = int(value)
+
                 case '^stt_model$':
                     if value != "AWS Polly" and not os.path.exists(os.path.join("models", value)):
                         print(f"Error: param value ({value}) is invalid.  Expected 'AWS Polly' or a directory in ./models")
                     else:
                         G.STT_MODEL = value
+
                 case '^text_wrap$':
                     if check_var_range(var_name=param, val=value, min_value=25, max_value=150):
                         G.TEXT_WRAP = int(value)
+
                 case '^voi[ces]*$':
                     # Change voice using index or voice name
                     menu_set_voice(botobj=botobj, voice=value)
                     botobj.text_to_speech(f"I am now set to be {botobj.voice}", voice=botobj.voice)
+
                 case _:
                     print(f"oops, cannot set '{param}'", end="\n\n")
 
         # Common: Show Commands
         case '^sh[ow]*\\s*\\??$':
             print(show_menu)
+
         case '^((sh|show) (\\?|voi[ces]*|int[ro]*|mor[e]*|con[fig]*|cha[t]*|log|his[tory]*))$':
             if not arg2: arg2 = arg1
             match RegExpNoCase(arg2):
@@ -169,11 +180,13 @@ def ans_matched_common(args=None, botobj=None, ret_bool=True):
                         v = ["Not Configured", "Configured"][v]
                         print("{0:30} {1}".format(k, v))
                     print()
+
                 case '^int[ro]*$':
                     if botobj.intro is None:
                         print("Introduction has not been set")
                     else:
                         print("Introduction:\n" + "\n".join(textwrap.wrap(botobj.intro, G.TEXT_WRAP)))
+
                 case '^(log|cha[t]*|his[tory]*)$':
                     if not os.path.exists(botobj.db_filename):
                         print("No history for the current chat")
@@ -221,7 +234,7 @@ def ans_matched_common(args=None, botobj=None, ret_bool=True):
                     print(f"oops, '{arg1}' command can not find an option for '{arg2}'", end="\n\n")
 
         # Common Test Commands
-        case '^(t .+|(t|test )(mic|tts|voices|gpt))$':
+        case '^(t .+|(t|test )(gpt|mic|stt|tts|voices))$':
             if not arg2: arg2 = arg1
             match RegExpNoCase(arg2):
                 case 'gpt':
@@ -231,12 +244,29 @@ def ans_matched_common(args=None, botobj=None, ret_bool=True):
                     botobj.text_to_speech(gpt_response, voice="David")
                     botobj.intro = None
                     print()
+
                 case 'mic':
                     # Test microphone/recording and speech-to-text
                     audio_recorder(duration=3, mp3_file_name=mp3_file_name, playback=True)
                     botobj.transcribe_audio(mp3_file_name)
+
+                case 'stt':
+                    # Test speech-to-text drivers
+                    if "y" == input("Do you want to test 'AWS Polly' [y|n]: ").lower():
+                        audio_recorder(duration=3, mp3_file_name="content/user.mp3")
+                        botobj.transcribe_audio("content/user.mp3")
+
+                    sub_folders = [os.path.basename(f.path) for f in os.scandir("models") if f.is_dir()]
+                    if not sub_folders:
+                        print("There are no models saved in the './models' directory")
+                    else:
+                        for model in sub_folders:
+                            if "y" == input(f"Do you want to test '{model}' model [y|n]: ").lower():
+                                text = audio_recorder_stt(model=model, print_status=False)
+                                print("User:  ", text)
+
                 case 'tts':
-                    # Test each text-to-speech driver
+                    # Test each text-to-speech drivers
                     print(f"The current test string is '{test_string}'")
                     choice = ""
                     while choice not in ["y", "n"]:
@@ -281,6 +311,7 @@ def ans_matched_common(args=None, botobj=None, ret_bool=True):
             match RegExpNoCase(arg2):
                 case 'api-key':
                     api_check_key_status()
+
                 case 'info':
                     # Show debug information
                     print("*" * 80)
@@ -296,6 +327,7 @@ def ans_matched_common(args=None, botobj=None, ret_bool=True):
 
                     print("*" * 80 + "\nVoices Info:\n" + "*" * 80)
                     pprint(Voices.__dict__)
+
                 case 'interview':
                     # Set introduction to python interview
                     botobj.intro = f"""
@@ -304,14 +336,18 @@ def ans_matched_common(args=None, botobj=None, ret_bool=True):
                         Keep responses under {G.MAX_WORDS} words and be funny sometimes.
                     """
                     botobj.intro = botobj.clean_chat_message(text=botobj.intro, add_limit=False)
+
                 case 'logging':
                     print("{0:30} {1}".format("logging Level", chat_log))
                     print("{0:30} {1}".format("log file", chat_log.file_name))
+
                 case 'version':
                     print(G.VERSION)
+
                 case 'voice':
                     # Show detail of all voices
                     pprint(botobj.voices.names)
+
                 case _:
                     print(f"oops, '{arg1}' command can not find an option for '{arg2}'", end="\n\n")
         case _:

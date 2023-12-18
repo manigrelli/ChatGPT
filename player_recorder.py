@@ -39,9 +39,7 @@ def audio_player(mp3_file_name="content/user.mp3"):
 #
 # https://gist.github.com/mirfan899/4dec738636c711d378eac1793ec95329
 #
-
-
-def audio_recorder_stt(duration=15, model=None):
+def audio_recorder_stt(duration=15, model=G.STT_MODEL, print_status=True):
     """"""
     trace()
 
@@ -73,7 +71,8 @@ def audio_recorder_stt(duration=15, model=None):
             if recognizer.AcceptWaveform(data):
                 text = recognizer.Result()[14:-3]
                 if text:
-                    print(f"{text}.")
+                    if print_status:
+                        print(f"{text}.")
                     buffer.append(text)
                 else:
                     break
@@ -85,7 +84,7 @@ def audio_recorder_stt(duration=15, model=None):
         return
     else:
         text = text.strip()
-        if not text:
+        if not text and print_status:
             print("Nothing recorded?")
         return text
 
