@@ -244,7 +244,7 @@ default_region=us-east-1
 ### MD5 hashes:
 ```
 $ md5sum.exe bin/*
-54d0cf01410d5c91a3dc0b1bcb2f30d5 *bin/chatbot_v1.exe
+b478c0dc9a23e9f2d8f8f0d069efca88 *bin/chatbot_v1.exe
 3c44d972d292a75bff8f9df6a50670d5 *bin/lame.exe
 41991ca4d9201eb5914a617ac1423148 *bin/mpg123.exe
 $ 
