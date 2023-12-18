@@ -1,5 +1,5 @@
 This 'models' directory is for storing Speech-to-Text recognition models.
-[alphacephei.com](https://alphacephei.com/vosk/models) has lots of vosk compatible models.
+[Alphacephei.com](https://alphacephei.com/vosk/models) has lots of vosk compatible models.
 I recommend downloading [vosk-model-small-en-us-0.15 zip](https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip)
  (~40Mb).  Extract the zip file into this 'models' directory like this:
 
@@ -23,7 +23,7 @@ model=vosk-model-small-en-us-0.15
 .
 ```
 
-when you re-launch main.py, you can check the status:
+When you re-launch main.py, you can check the status:
 ```
 D:\> python main.py -i config.ini
 
@@ -55,5 +55,24 @@ ElevenLabs                     Configured
 AWS                            Configured
 
 [2] Home>
+
+```
+
+And then test the Speech-to-Text drivers:
+
+```
+[2] Home> test stt
+Do you want to test 'AWS Polly' [y|n]: y
+** Start Recording...3 seconds
+** Stop!
+
+User:  Testing poly, one, two, three.
+
+Do you want to test 'vosk-model-small-en-us-0.15' model [y|n]: y
+** Start Recording...
+** Stop!
+
+User:   Testing four, five, six. Pick up sticks.
+[3] Home>
 
 ```
