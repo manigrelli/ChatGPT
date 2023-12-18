@@ -263,7 +263,7 @@ def ans_matched_common(args=None, botobj=None, ret_bool=True):
                         for model in sub_folders:
                             if "y" == input(f"Do you want to test '{model}' model [y|n]: ").lower():
                                 text = audio_recorder_stt(model=model, print_status=False)
-                                print("User:  ", text)
+                                print("\nUser:  ", text)
 
                 case 'tts':
                     # Test each text-to-speech drivers
