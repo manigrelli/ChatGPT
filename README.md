@@ -38,6 +38,10 @@ remarkably my son found a great use case:
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 "Tell me an easy way to remember what the chloroplast does"
 
+<br>
+
+#### Note: Before you jump into  trying to download or run this, you MUST have an existing AWS account and API Keys.
+
 ---
 
 When launched, the application begins with a familiar operating system like prompt or 
