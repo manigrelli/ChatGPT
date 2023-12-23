@@ -40,7 +40,7 @@ remarkably my son found a great use case:
 
 <br>
 
-#### Note: Before you jump into  trying to download or run this, you MUST have an existing AWS account and API Keys.
+#### Note: Before you jump into  trying to download or run this, you MUST have an existing Open-AI account and API Keys.
 
 ---
 
